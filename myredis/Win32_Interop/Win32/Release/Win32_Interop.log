@@ -1,0 +1,30 @@
+﻿  Performing Custom Build Tools
+  子目录或文件 resources 已经存在。
+  MC: Compiling EventLog.mc
+  Microsoft (R) Windows (R) Resource Compiler Version 10.0.10011.16384
+  
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  
+  Microsoft (R) Incremental Linker Version 14.29.30139.0
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+LINK : warning LNK4068: /MACHINE not specified; defaulting to X86
+  win32fixes.c
+  Win32_ANSI.c
+  Win32_APIs.c
+  Win32_dlmalloc.c
+  Win32_Error.c
+  Win32_PThread.c
+  Win32_QFork_impl.c
+F:\Learn\redis-win-3.2.100\redis-win-3.2.100\src\sds.h(153,38): warning C4244: 'return': conversion from 'uint64_t' to 'size_t', possible loss of data
+F:\Learn\redis-win-3.2.100\redis-win-3.2.100\src\sds.h(178,39): warning C4244: 'return': conversion from 'uint64_t' to 'size_t', possible loss of data
+F:\Learn\redis-win-3.2.100\redis-win-3.2.100\src\sds.h(246,40): warning C4244: 'return': conversion from 'uint64_t' to 'size_t', possible loss of data
+  Win32_RedisLog.c
+  Win32_Signal_Process.c
+  Win32_ThreadControl.c
+  Win32_Time.c
+  win32_wsiocp.c
+  Win32_EventLog.cpp
+  Win32_variadicFunctor.cpp
+  Win32_Interop.vcxproj -> F:\Learn\redis-win-3.2.100\redis-win-3.2.100\msvs\Win32\Release\Win32_Interop.lib
