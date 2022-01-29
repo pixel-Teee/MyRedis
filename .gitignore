@@ -1,6 +1,7 @@
 Debug/
 x64/
 myredis/Debug/x64
+.vs/
 
 # Prerequisites
 *.d
