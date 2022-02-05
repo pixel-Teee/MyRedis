@@ -110,9 +110,31 @@ int MyRedis::RedisCommand(const char* cmd)
 	//查询结果
 	switch (reply->type)
 	{
-	
+	case REDIS_REPLY_STATUS://返回状态一般是设置语句 比如set hmset
+		//查询成功
+		if (strcasecmp(reply->str, "ok") == 0)
+		{
+			std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+			return 0;
+		}
+		if (strcasecmp(reply->str, "pong") == 0)
+		{
+			std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+			return 0;
+		}
+		break;
+	case REDIS_REPLY_ARRAY://查询 hmset
+		std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+		return 0;
+	case REDIS_REPLY_INTEGER://hset hdel
+		std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+		return 0;
 	}
-	return 0;
+
+	std::cout << "RedisCommand [" << cmd << "] is failed" << std::endl;
+	std::cout << "err [" << reply->type << "] is failed" << std::endl;
+	std::cout << "err [" << reply->str << "] is failed" << std::endl;
+	return -1;
 }
 
 void MyRedis::Clear()
@@ -123,5 +145,17 @@ void MyRedis::Clear()
 
 char* MyRedis::value(int index, int& length)
 {
-	return nullptr;
+	//empty string, when error or out of range, then return the empty string
+	char s[1] = "";
+	if(reply == nullptr) return s;
+	//elements: element's num
+	if(index >= reply->elements) return s;
+
+	auto data = reply->element[index];
+	if(data == nullptr) return s;
+
+	length = data->len;
+	if(length == 0 || data->str == nullptr || data->type == REDIS_REPLY_NIL) return s;
+
+	return data->str;
 }
