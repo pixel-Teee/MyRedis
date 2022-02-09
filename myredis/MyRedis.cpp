@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "MyRedis.h"
 
+#include <iostream>
+
 RedisBase* NewRedis()
 {
 	return new MyRedis();
