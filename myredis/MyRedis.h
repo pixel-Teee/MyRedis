@@ -27,4 +27,6 @@ public:
 	virtual int RedisCommand(const char* cmd);
 	virtual void Clear();
 	virtual char* value(int index, int& length);
+
+	virtual void* getReply();
 };

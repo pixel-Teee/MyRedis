@@ -75,7 +75,7 @@ int MyRedis::ReConnect()
 		ClearContext();
 		return -2;
 	}
-	printf("redis connect successful [%s:%d] \n", redisip, redisport);
+	//printf("redis connect successful [%s:%d] \n", redisip, redisport);
 	return 1;
 }
 
@@ -107,36 +107,44 @@ int MyRedis::RedisCommand(const char* cmd)
 	if (!IsConnect())
 	{
 		printf("redis disconnect...2 \n");
+		Clear();
+		ClearContext();
+		return -3;
 	}
 
-	//查询结果
-	switch (reply->type)
-	{
-	case REDIS_REPLY_STATUS://返回状态一般是设置语句 比如set hmset
-		//查询成功
-		if (strcasecmp(reply->str, "ok") == 0)
-		{
-			std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
-			return 0;
-		}
-		if (strcasecmp(reply->str, "pong") == 0)
-		{
-			std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
-			return 0;
-		}
-		break;
-	case REDIS_REPLY_ARRAY://查询 hmset
-		std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
-		return 0;
-	case REDIS_REPLY_INTEGER://hset hdel
-		std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
-		return 0;
-	}
+	if(reply->type == REDIS_REPLY_ERROR) return -4;
+	if(reply->type == REDIS_REPLY_NIL) return -5;
 
-	std::cout << "RedisCommand [" << cmd << "] is failed" << std::endl;
-	std::cout << "err [" << reply->type << "] is failed" << std::endl;
-	std::cout << "err [" << reply->str << "] is failed" << std::endl;
-	return -1;
+	return 0;
+
+	////查询结果
+	//switch (reply->type)
+	//{
+	//case REDIS_REPLY_STATUS://返回状态一般是设置语句 比如set hmset
+	//	//查询成功
+	//	if (strcasecmp(reply->str, "ok") == 0)
+	//	{
+	//		std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+	//		return 0;
+	//	}
+	//	if (strcasecmp(reply->str, "pong") == 0)
+	//	{
+	//		std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+	//		return 0;
+	//	}
+	//	break;
+	//case REDIS_REPLY_ARRAY://查询 hmset
+	//	std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+	//	return 0;
+	//case REDIS_REPLY_INTEGER://hset hdel
+	//	std::cout << "RedisCommand [" << cmd << "] is successfully..." << std::endl;
+	//	return 0;
+	//}
+
+	//std::cout << "RedisCommand [" << cmd << "] is failed" << std::endl;
+	//std::cout << "err [" << reply->type << "] is failed" << std::endl;
+	//std::cout << "err [" << reply->str << "] is failed" << std::endl;
+	//return -1;
 }
 
 void MyRedis::Clear()
@@ -149,15 +157,29 @@ char* MyRedis::value(int index, int& length)
 {
 	//empty string, when error or out of range, then return the empty string
 	char s[1] = "";
+	length = -1;
 	if(reply == nullptr) return s;
 	//elements: element's num
+
+	length = -2;
 	if(index >= reply->elements) return s;
 
 	auto data = reply->element[index];
+
+	length = -3;
 	if(data == nullptr) return s;
 
-	length = data->len;
-	if(length == 0 || data->str == nullptr || data->type == REDIS_REPLY_NIL) return s;
+	//length = data->len;
+	length = -4;
+	if(data->type == REDIS_REPLY_NIL) return s;
+	length = -5;
+	if(data->len == 0 || data->str == nullptr) return s;
 
+	length = data->len;
 	return data->str;
+}
+
+void* MyRedis::getReply()
+{
+	return reply;
 }
